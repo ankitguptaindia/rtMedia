@@ -5,7 +5,7 @@
   "globals_path" : "./res/constants.js",
 
   "selenium" : {
-    "start_process" : true,
+    "start_process" : false,
     "server_path" : "./node_modules/selenium-server/lib/runner/selenium-server-standalone-2.45.0.jar"
   },
 

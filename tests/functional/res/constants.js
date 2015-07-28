@@ -5,8 +5,8 @@ This is a standalone scripts for centralized management of all selectors and all
 
 module.exports ={
   //username and password for each wordpress roles
-    TESTADMINUSERNAME: 'ADMINUSER',
-    TESTADMINPASSWORD: 'ADMINPASS',
+    TESTADMINUSERNAME: 'admin',
+    TESTADMINPASSWORD: 'rtcamp.com',
 
     TESTEDITORUSERNAME: 'EDITORUSER',
     TESTEDITORPASSWORD: 'EDITORPASS',
@@ -21,7 +21,7 @@ module.exports ={
     TESTSUBSCRIBERPASSWORD: 'SUBSCRIBERPASS',
   //Home site url enter here
    URLS: {
-        LOGIN: 'http://wp.localtest.me'
+        LOGIN: 'http://ankit.rtcamp.net/'
    },
   //local path of all test_data resources
    PATH: {
