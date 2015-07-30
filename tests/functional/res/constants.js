@@ -55,7 +55,8 @@ module.exports ={
             ENABLE_LIGHTBOX: 'input[name="rtmedia-options[general_enableLightbox]"]',
             MEDIA_PER_PAGE: 'input[name="rtmedia-options[general_perPageMedia]"]',
             SELECT_LOADMORE: 'input[value="load_more"]',
-            SELECT_PAGINATION: 'input[value="pagination"]'
+            SELECT_PAGINATION: 'input[value="pagination"]',
+            DIRECT_UPLOAD:  'input[name="rtmedia-options[general_direct_upload]"]'
           },
 
           MEDIASIZES: {

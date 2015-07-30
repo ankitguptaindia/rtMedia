@@ -23,12 +23,13 @@ module.exports = {
                 } })
             .pause(1000)
       },
+      
     'step two: Check on Frontend ' : function (browser) {
             browser
             .goToMedia()
-            .click('div.rtmedia-item-thumbnail img')
+            .click('#wp-admin-bar-my-account-media-photo a')
             .pause(1000)
-            .assert.elementPresent('.rtmedia-media')
+            //.assert.elementPresent('.rtmedia-media')
             .wplogout()
             .end();
         }
