@@ -1,6 +1,6 @@
 /*
  @author: Ankit Gupta
- TestCase: To Check Comment On Uploaded Media
+ TestCase: To Check Number of media per page
 */
 module.exports = {
   tags: ['display', 'media-page'],
@@ -12,21 +12,24 @@ module.exports = {
           .openrtMediaSettings()
           .click(data.SELECTORS.DISPLAY.DISPLAY)
           .pause(1000)
+    // Clear the text box previous and set new value
           .clearValue('#rtm-form-number-0')
-          .setValue('#rtm-form-number-0', '5')
+          .setValue('#rtm-form-number-0', '1')
           .click(data.SELECTORS.SUBMIT)
           .pause(1000)
-}
+
     },
 
     'step two: Check on Frontend ' : function (browser) {
-            browser
-            .goToMedia()
-            .click('#wp-admin-bar-my-account-media-photo a')
+        browser
+            .uploadMediaInActivity()
             .pause(1000)
-            //To check the how many li is available. Code is left.
+            .waitForElementVisible('.rtmedia-activity-media-length-1', 2000)
+            .expect.element('.rtmedia-activity-media-length-1').to.be.present
+            //To check the how many li is available. Code is left. */
            .wplogout()
            .end();
         }
+
 
   };

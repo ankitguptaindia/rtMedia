@@ -1,4 +1,4 @@
-/*
+  /*
  @author: Prabuddha Chakraborty
  TestCase: Enable Media in Profile Negative Case
  */
@@ -24,6 +24,7 @@ module.exports = {
                 } })
             .pause(1000)
           },
+
   'step two: Upload and Check Media ' : function (browser) {
             browser
             .assert.elementNotPresent('#wp-admin-bar-my-account-media.menupop a.ab-item')
