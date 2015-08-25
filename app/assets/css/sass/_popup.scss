@@ -26,6 +26,19 @@
 		margin: 0 auto;
 		max-width: inherit;
 	}
+
+    .rtmedia-message-container {
+        position: absolute;
+        top: 45%;
+        left:0;
+        right:0;
+        margin-left:auto;
+        margin-right:auto;
+
+        @media (max-device-width: 640px) {
+            top: 25%;
+        }
+    }
 }
 
 .rtm-ltb-action-container {
@@ -38,7 +51,7 @@
     padding: 0 10px;
     position: absolute;
     width: 100%;
-	@include transition(all 300ms ease-out);
+	transition: all 300ms ease-out;
 
 
 	.rtm-single-media:hover & {
@@ -219,6 +232,9 @@
 		max-width: 100%; // Theme 2014/2013
 		width: auto;
 	}
+  @media only screen and ( max-device-width : 1024px ) {
+	margin: 40px 0;
+  }
 }
 
 .rtm-user-meta-details {
@@ -445,4 +461,28 @@
 .rtm-single-media.rtm-media-type-video {
 	padding-bottom: 40px;
 	padding-top: 40px;
+}
+
+.rtmedia-gallery-alert-container {
+  	position: fixed;
+  	top:0;
+  	left: 0;
+ 	height: 100%;
+  	width: 100%;
+  	background-color: rgba( 0, 0, 0, 0.6);
+  	z-index: 999997;
+}
+.rtmedia-gallery-message-box {
+	position: fixed;
+	top: 40%;
+	left:50%;
+	margin-left:auto;
+	margin-right:auto;
+ 	z-index: 999999;
+
+  	span {
+	  position: relative;
+	  left: -50%;
+	}
+
 }

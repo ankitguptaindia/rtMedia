@@ -140,6 +140,28 @@ http://www.youtube.com/watch?v####dJrykKQGDcs
 
 ## Changelog ##
 
+#### 3.8.15 ####
+* CSS fixes
+* Added new filters and actions
+
+#### 3.8.14 ####
+* Enhanced delete media action in media gallery
+* CSS fixes
+* Other bug fixes
+
+#### 3.8.13 ####
+* Update links
+* Added support for "og" meta tags for Yoast SEO plugin
+* Update French, Spanish, Persian and German translations
+
+#### 3.8.12 ####
+* Updated media gallery actions for BuddyPress groups
+* Updated action messages for single media
+* Updated view count process
+* Added SCRIPT_DEBUG support
+* Fixed bugs in admin settings
+* Bug fixes
+
 #### 3.8.11 ####
 * Update album edit template
 * Fix BuddyPress activity content on media edit
@@ -1033,8 +1055,8 @@ http://www.youtube.com/watch?v####dJrykKQGDcs
 * HTML5 Audio Tag Support (with fallback)
 * HTML5 Video Tag Support (with fallback)
 
-#### 3.8.11 ####
-Requires BuddyPress 1.7 or higher, if using BuddyPress. Update album edit template, fix BuddyPress activity content on media edit, autoplay video in lightbox.
+#### 3.8.15 ####
+Requires BuddyPress 1.7 or higher, if using BuddyPress. CSS fixes and added new hooks.
 
 ## Sponsors ##
 

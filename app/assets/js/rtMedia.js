@@ -60,16 +60,6 @@ function apply_rtMagnificPopup( selector ) {
 							return;
 						}
 
-						$container = this.content.find( '.tagcontainer' );
-						if ( $container.length > 0 ) {
-							$context = $container.find( 'img' );
-							$container.find( '.tagcontainer' ).css(
-									{
-										'height': $context.css( 'height' ),
-										'width': $context.css( 'width' )
-									} );
-
-						}
 						var settings = { };
 
 						if ( typeof _wpmejsSettings !== 'undefined' )
@@ -160,7 +150,11 @@ jQuery( 'document' ).ready( function ( $ ) {
 
 	$( "#rt_media_comment_form" ).submit( function ( e ) {
 		if ( $.trim( $( "#comment_content" ).val() ) == "" ) {
-			alert( rtmedia_empty_comment_msg );
+			if ( jQuery('#rtmedia-single-media-container').length == 0 ) {
+				rtmedia_gallery_action_alert_message(rtmedia_empty_comment_msg, 'warning');
+			} else {
+				rtmedia_single_media_alert_message(rtmedia_empty_comment_msg, 'warning');
+			}
 			return false;
 		} else {
 			return true;
@@ -179,7 +173,7 @@ jQuery( 'document' ).ready( function ( $ ) {
     })
     //rtmedia_lightbox_enabled from setting
     if (typeof(rtmedia_lightbox_enabled) != 'undefined' && rtmedia_lightbox_enabled == "1") {
-        apply_rtMagnificPopup('.rtmedia-list-media, .rtmedia-activity-container ul.rtmedia-list, #bp-media-list,.bp-media-sc-list, li.media.album_updated ul,ul.bp-media-list-media, li.activity-item div.activity-content div.activity-inner div.bp_media_content, .rtm-bbp-container, .comment-content');
+        apply_rtMagnificPopup('.rtmedia-list-media, .rtmedia-activity-container ul.rtmedia-list, #bp-media-list,.bp-media-sc-list, li.media.album_updated ul,ul.bp-media-list-media, li.activity-item div.activity-content div.activity-inner div.bp_media_content, .rtm-bbp-container, ul.rtm-comment-container');
     }
 
     jQuery.ajaxPrefilter(function(options, originalOptions, jqXHR) {
@@ -207,7 +201,6 @@ jQuery( 'document' ).ready( function ( $ ) {
 			    setTimeout( function(){
 				    apply_rtMagnificPopup('.rtmedia-activity-container ul.rtmedia-list, #bp-media-list, .bp-media-sc-list, li.media.album_updated ul,ul.bp-media-list-media, li.activity-item div.activity-content div.activity-inner div.bp_media_content');
 				    jQuery( 'ul.activity-list li.rtmedia_update:first-child .wp-audio-shortcode, ul.activity-list li.rtmedia_update:first-child .wp-video-shortcode' ).mediaelementplayer( {
-
 					    // if the <video width> is not specified, this is the default
 					    defaultVideoWidth: 480,
 					    // if the <video height> is not specified, this is the default
@@ -327,16 +320,16 @@ jQuery( 'document' ).ready( function ( $ ) {
 						jQuery( ".close-reveal-modal" ).click();
 					}, 2000 );
 				} else if ( typeof response.error != 'undefined' ) {
-                    alert( response.error );
+					rtmedia_gallery_action_alert_message( response.error, 'warning' );
                 } else {
-					alert( rtmedia_something_wrong_msg );
+					rtmedia_gallery_action_alert_message( rtmedia_something_wrong_msg, 'warning' );
 				}
 
 				$( "#rtmedia_create_new_album" ).removeAttr( 'disabled' );
 				$( "#rtmedia_create_new_album" ).html( old_val );
 			} );
         } else {
-			alert( rtmedia_empty_album_name_msg );
+			rtmedia_gallery_action_alert_message( rtmedia_empty_album_name_msg, 'warning' );
 		}
 	} );
 
@@ -346,7 +339,7 @@ jQuery( 'document' ).ready( function ( $ ) {
 				jQuery( this ).closest( 'form' ).attr( 'action', '../../../media/delete' ).submit();
 			}
 		} else {
-			alert( rtmedia_no_media_selected );
+			rtmedia_gallery_action_alert_message( rtmedia_no_media_selected, 'warning' );
 		}
 	} );
 
@@ -356,7 +349,7 @@ jQuery( 'document' ).ready( function ( $ ) {
 				jQuery( this ).closest( 'form' ).attr( 'action', '' ).submit();
 			}
 		} else {
-			alert( rtmedia_no_media_selected );
+			rtmedia_gallery_action_alert_message( rtmedia_no_media_selected, 'warning' );
 		}
 
 	} );
@@ -443,34 +436,34 @@ jQuery( 'document' ).ready( function ( $ ) {
 	}
 
 	function rtmedia_disable_popup_navigation_comment_focus() {
-		jQuery( document ).on( 'focusin', '#comment_content', function () {
-			jQuery( document ).unbind( 'keydown' );
-		} );
-		jQuery( document ).on( 'focusout', '#comment_content', function () {
-			var rtm_mfp = jQuery.magnificPopup.instance;
-			jQuery( document ).on( 'keydown', function ( e ) {
-				if ( e.keyCode === 37 ) {
-					rtm_mfp.prev();
-				} else if ( e.keyCode === 39 ) {
-					rtm_mfp.next();
-				}
-			} );
-		} );
-	}
+        jQuery( document ).on( 'focusin', '#comment_content', function() {
+            jQuery( document ).unbind( 'keydown' );
+        } );
+        jQuery( document ).on( 'focusout', '#comment_content', function() {
+            var rtm_mfp = jQuery.magnificPopup.instance;
+            jQuery( document ).on( 'keydown', function( e ) {
+                if ( e.keyCode === 37 ) {
+                    rtm_mfp.prev();
+                } else if ( e.keyCode === 39 ) {
+                    rtm_mfp.next();
+                }
+            } );
+        } );
+    }
 
-	var dragArea = jQuery( "#drag-drop-area" );
-	var activityArea = jQuery( '#whats-new' );
-	var content = dragArea.html();
-	jQuery( '#rtmedia-upload-container' ).after( "<div id='rtm-drop-files-title'>" + rtmedia_drop_media_msg + "</div>" );
-	if ( typeof rtmedia_bp_enable_activity != "undefined" && rtmedia_bp_enable_activity == "1" ) {
-		jQuery( '#whats-new-textarea' ).append( "<div id='rtm-drop-files-title'>" + rtmedia_drop_media_msg + "</div>" );
-	}
-	jQuery( document )
-			.on( 'dragover', function ( e ) {
-				jQuery( '#rtm-media-gallery-uploader' ).show();
-				if ( typeof rtmedia_bp_enable_activity != "undefined" && rtmedia_bp_enable_activity == "1" ) {
-					activityArea.addClass( 'rtm-drag-drop-active' );
-				}
+    var dragArea = jQuery( "#drag-drop-area" );
+    var activityArea = jQuery( '#whats-new' );
+    var content = dragArea.html();
+    jQuery( '#rtmedia-upload-container' ).after( "<div id='rtm-drop-files-title'>" + rtmedia_drop_media_msg + "</div>" );
+    if ( typeof rtmedia_bp_enable_activity != "undefined" && rtmedia_bp_enable_activity == "1" ) {
+        jQuery( '#whats-new-textarea' ).append( "<div id='rtm-drop-files-title'>" + rtmedia_drop_media_msg + "</div>" );
+    }
+    jQuery( document )
+            .on( 'dragover', function( e ) {
+                jQuery( '#rtm-media-gallery-uploader' ).show();
+                if ( typeof rtmedia_bp_enable_activity != "undefined" && rtmedia_bp_enable_activity == "1" ) {
+                    activityArea.addClass( 'rtm-drag-drop-active' );
+                }
 
 //            activityArea.css('height','150px');
 				dragArea.addClass( 'rtm-drag-drop-active' );
@@ -565,12 +558,18 @@ jQuery( 'document' ).ready( function ( $ ) {
                 class_name = jQuery( this ).attr( 'class' );
 	            jQuery( this ).parents( '.rtm-uploader-tabs' ).siblings('[data-id="' + class_name + '"]').show();
                 jQuery( this ).addClass( 'active' );
+
+                if ( class_name != 'rtm-upload-tab' ) {
+                    jQuery( 'div.moxie-shim' ).children( 'input[type=file]' ).hide();
+                } else {
+                    jQuery( 'div.moxie-shim' ).children( 'input[type=file]' ).show();
+                }
             }
         });
     }
 
 	// delete media from gallery page under the user's profile when user clicks the delete button on the gallery item.
-	jQuery( '.rtmedia-list-media' ).on( 'click', '.rtm-delete-media', function ( e ) {
+	jQuery( '.rtmedia-container' ).on( 'click', '.rtm-delete-media', function ( e ) {
 		e.preventDefault();
 		var confirmation = 'Are you sure you want to delete this media?';
 
@@ -580,7 +579,7 @@ jQuery( 'document' ).ready( function ( $ ) {
 
 		if ( confirm( confirmation ) ) { // if user confirms, send ajax request to delete the selected media
 			var curr_li = jQuery( this ).closest( 'li' );
-			var nonce = jQuery( '#rtmedia-upload-container #rtmedia_media_delete_nonce' ).val();
+			var nonce = jQuery( '#rtmedia_media_delete_nonce' ).val();
 
 			var data = {
 				action: 'delete_uploaded_media',
@@ -595,18 +594,19 @@ jQuery( 'document' ).ready( function ( $ ) {
 				success: function ( data ) {
 					if ( data == '1' ) {
 						//media delete
+						rtmedia_gallery_action_alert_message( 'file deleted succeessfully.', 'success' );
 						curr_li.remove();
 						if ( typeof rtmedia_masonry_layout != "undefined" && rtmedia_masonry_layout == "true" && jQuery( '.rtmedia-container .rtmedia-list.rtm-no-masonry' ).length == 0 ) {
 							rtm_masonry_reload( rtm_masonry_container );
 						}
 					} else { // show alert message
-						alert( rtmedia_file_not_deleted );
+						rtmedia_gallery_action_alert_message( rtmedia_file_not_deleted, 'warning' );
 					}
 				}
 			} );
 		}
 	} );
-});
+}	);
 
 
 
@@ -715,4 +715,43 @@ function rtmediaGetParameterByName( name ) {
 	var regex = new RegExp( "[\\?&]" + name + "=([^&#]*)" ),
 			results = regex.exec( location.search );
 	return results == null ? "" : decodeURIComponent( results[1].replace( /\+/g, " " ) );
+}
+
+function rtmedia_single_media_alert_message( msg, action ) {
+    var action_class = 'rtmedia-success';
+
+    if ( 'warning' == action ) {
+        action_class = 'rtmedia-warning';
+    }
+
+    jQuery( '.rtmedia-single-media .rtmedia-media' ).css( 'opacity', '0.2' );
+    jQuery( '.rtmedia-single-media .rtmedia-media' ).after( "<div class='rtmedia-message-container'><span class='"+ action_class +"'>" + msg + " </span></div>" );
+
+    setTimeout( function() {
+        jQuery( '.rtmedia-single-media .rtmedia-media' ).css( 'opacity', '1' );
+        jQuery( ".rtmedia-message-container" ).remove();
+    }, 3000 );
+
+    jQuery('.rtmedia-message-container').click( function() {
+        jQuery( '.rtmedia-single-media .rtmedia-media' ).css( 'opacity', '1' );
+        jQuery( ".rtmedia-message-container" ).remove();
+    } );
+}
+
+function rtmedia_gallery_action_alert_message( msg, action ) {
+	var action_class = 'rtmedia-success';
+
+	if ( 'warning' == action ) {
+		action_class = 'rtmedia-warning';
+	}
+	var container = '<div class="rtmedia-gallery-alert-container"> </div>';
+	jQuery( 'body' ).append( container );
+	jQuery( '.rtmedia-gallery-alert-container' ).append( "<div class='rtmedia-gallery-message-box'><span class='"+ action_class +"'>" + msg + " </span></div>" );
+
+	setTimeout( function() {		jQuery( ".rtmedia-gallery-alert-container" ).remove();
+	}, 3000 );
+
+	jQuery('.rtmedia-gallery-message-box').click( function() {
+		jQuery( ".rtmedia-gallery-alert-container" ).remove();
+	} );
 }

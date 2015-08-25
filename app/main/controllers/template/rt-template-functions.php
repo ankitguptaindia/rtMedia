@@ -309,7 +309,8 @@ function rtmedia_media( $size_flag = true, $echo = true, $media_size = "rt_media
 			$html .= '</div>';
 		} elseif ( $rtmedia_media->media_type == 'music' ) {
                     $width = $rtmedia->options[ 'defaultSizes_music_singlePlayer_width' ];
-                    $size = ' width="'. $width .'px" height="30" ';
+					$width = ( $width * 75 ) / 640;
+                    $size = ' width= '. $width .'% height="30" ';
 			if ( ! $size_flag ) {
 				$size = '';
 			}
@@ -361,7 +362,9 @@ function rtmedia_image( $size = 'rt_media_thumbnail', $id = false, $recho = true
 	$thumbnail_id = 0;
 	if ( isset( $media_object->media_type ) ) {
 		if ( $media_object->media_type == 'album' || $media_object->media_type != 'photo' || $media_object->media_type == 'video' ) {
-			$thumbnail_id = ( isset( $media_object->cover_art ) && ( $media_object->cover_art != "0" ) ) ? $media_object->cover_art : false;
+			if ( $media_object->media_type == 'video' ) {
+				$thumbnail_id = ( isset( $media_object->cover_art ) && ( $media_object->cover_art != "0" ) ) ? $media_object->cover_art : false;
+			}
 			$thumbnail_id = apply_filters( 'show_custom_album_cover', $thumbnail_id, $media_object->media_type, $media_object->id ); // for rtMedia pro users
 		} elseif ( $media_object->media_type == 'photo' ) {
 			$thumbnail_id = $media_object->media_id;
@@ -828,7 +831,7 @@ function rmedia_single_comment( $comment ) {
 
 	global $rtmedia_media;
 	if ( is_rt_admin() || ( isset( $comment[ 'user_id' ] ) && ( get_current_user_id() == $comment[ 'user_id' ] || $rtmedia_media->media_author == get_current_user_id() ) ) || apply_filters( 'rtmedia_allow_comment_delete', false ) ) { // show delete button for comment author and admins
-		$html .= '<i data-id="' . $comment[ 'comment_ID' ] . '" class = "rtmedia-delete-comment dashicons dashicons-no-alt rtmicon" title="' . __( 'Delete Comment' ) . '"></i>';
+		$html .= '<i data-id="' . $comment[ 'comment_ID' ] . '" class = "rtmedia-delete-comment dashicons dashicons-no-alt rtmicon" title="' . __( 'Delete Comment', 'rtmedia' ) . '"></i>';
 	}
 
 	$html .= '<div class="clear"></div></div></div></li>';
@@ -904,8 +907,10 @@ function rtmedia_pagination_next_link() {
 		if ( function_exists( "bp_core_get_user_domain" ) ) {
 			if ( isset( $rtmedia_query->media_query[ 'context' ] ) && $rtmedia_query->media_query[ 'context' ] == 'profile' && isset( $rtmedia_query->media_query[ 'context_id' ] ) ) {
 				$user_id = $rtmedia_query->media_query[ 'context_id' ];
-			} else {
+			} else if( isset( $rtmedia_query->media_query[ 'media_author' ] ) ) {
 				$user_id = $rtmedia_query->media_query[ 'media_author' ];
+			} else {
+				$user_id = bp_displayed_user_id();
 			}
 			$link .= trailingslashit( bp_core_get_user_domain( $user_id ) );
 		} else {
@@ -2230,7 +2235,7 @@ function rtmedia_content_before_media() {
 
 	if ( $rt_ajax_request ) {
 		?>
-		<span class="rtm-mfp-close mfp-close dashicons dashicons-no-alt" title="<?php _e( "Close (Esc)" ); ?>"></span><?php
+		<span class="rtm-mfp-close mfp-close dashicons dashicons-no-alt" title="<?php _e( "Close (Esc)", 'rtmedia' ); ?>"></span><?php
 	}
 }
 
@@ -2721,4 +2726,36 @@ function rtm_filter_metaid_column_name( $q ) {
 		}
 	}
 	return $q;
+}
+
+/*
+ * Checking if SCRIPT_DEBUG constant is defined or not
+ */
+function rtm_get_script_style_suffix() {
+	$suffix = ( defined( 'SCRIPT_DEBUG' ) && constant( 'SCRIPT_DEBUG' ) === true ) ? '' : '.min';
+
+	return $suffix;
+}
+
+/**
+ * Adds delete nonce for all template file before tempalte load
+ */
+add_action( 'rtmedia_before_template_load', 'rtmedia_add_media_delete_nonce' );
+function rtmedia_add_media_delete_nonce() {
+	wp_nonce_field( 'rtmedia_' . get_current_user_id(), 'rtmedia_media_delete_nonce' );
+}
+
+
+/**
+ * 'rtmedia_before_template_load' will not fire for gallery shortcode
+ * To add delete nonce in gallery shortcode use rtmedia_pre_template hook
+ */
+add_action( 'rtmedia_pre_template', 'rtmedia_add_media_delete_nonce_shortcode' );
+//Adds delete nonce for gallery shortcode
+function rtmedia_add_media_delete_nonce_shortcode() {
+	global $rtmedia_query;
+	
+	if ( isset( $rtmedia_query->is_gallery_shortcode ) && $rtmedia_query->is_gallery_shortcode == true ) {
+		wp_nonce_field( 'rtmedia_' . get_current_user_id(), 'rtmedia_media_delete_nonce' );
+	}
 }
