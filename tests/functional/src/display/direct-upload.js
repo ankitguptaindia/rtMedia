@@ -31,6 +31,8 @@ module.exports = {
             .click('#rtMedia-upload-button')
             .setValue('input[type="file"]', require('path').resolve('/home/rtcamp/Desktop/img.png'))
             .pause(1000)
+            .assert.cssClassNotPresent(".start-media-upload")
+
           //  .expect.element('.rtmedia-item-title h4').text.to.equal('img')
             //.getAttribute('.rtmedia-item-title h4' "img", function(result){
             //  if(result.value){
