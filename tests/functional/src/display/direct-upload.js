@@ -23,6 +23,7 @@ module.exports = {
 
     },
     'step two: Check on Frontend ' : function (browser) {
+      var data = browser.globals;
             browser
             .goToMedia()
             .waitForElementVisible('body', 1500)
@@ -30,21 +31,16 @@ module.exports = {
             .pause(200)
             .click('#rtMedia-upload-button')
             .setValue('input[type="file"]', require('path').resolve('/home/rtcamp/Desktop/img.png'))
-            .pause(1000)
-            .assert.cssClassNotPresent(".start-media-upload")
-
-          //  .expect.element('.rtmedia-item-title h4').text.to.equal('img')
-            //.getAttribute('.rtmedia-item-title h4' "img", function(result){
-            //  if(result.value){
-              //                console.log('img is uploaded');
-          //    }
-
-          //  .setValue('.ac-input','nice')
-          //  .click('input[name="ac_form_submit"]')
-          //  .pause(2000)
-          //  .assert.containsText("#item-body .activity", "nice")
-          //  .wplogout()
-          //  .end(); */
+            .pause(500)
+          //  .expect.element('input.start-media-upload').to.be.present
+          //  console.log('Media is uploaded successfully')
+          //  .setValue('input[type=file]', require('path').resolve(data.PATH.TEST_IMAGE))
+          //  .pause(1000)
+          //  .assert.cssClassNotPresent("" , "start-media-upload")
+        //  .waitForElementVisible('.start-media-upload', 1000, function() {}, 'elemento .start-media-upload no era visible en 1000 ms')
+        //    .waitForElementNotPresent('.start-media-upload', 1000)
+            .wplogout()
+            .end();
 
         }
   };
